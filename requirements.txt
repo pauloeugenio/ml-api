@@ -2,4 +2,6 @@ pandas
 numpy
 Flask
 mysql-connector-python
-
+scikit-learn
+scipy
+seaborn

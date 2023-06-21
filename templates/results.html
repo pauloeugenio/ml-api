@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+</head>
+<body>
+    {% for algorithm, result in results.items() %}
+    <h2>{{ algorithm }}</h2>
+    <p>Accuracy: {{ result.accuracy }}</p>
+    <img src="/images/{{ algorithm }}_confusion_matrix.png" alt="Confusion Matrix">
+    {% endfor %}
+</body>
+</html>

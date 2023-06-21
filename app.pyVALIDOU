@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, send_file
+from flask import Flask, jsonify
 import csv
 import mysql.connector
 import random
@@ -11,7 +11,6 @@ from sklearn.svm import SVR
 from sklearn.metrics import accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
-import io
 
 app = Flask(__name__)
 
@@ -101,7 +100,7 @@ def consultar_dados():
         filtered_data = df[['voltA', 'voltB', 'voltC', 'correnteA', 'correnteB', 'correnteC', 'potenciaA']]
         filtered_data.to_csv('consulta_filtrada.csv', index=False)
 
-        # Salvar matrizes de confusão como imagens
+        # Imprimir matriz de confusão como imagem
         for algorithm, result in results.items():
             cm = result['confusion_matrix']
             labels = sorted(list(set(y)))
@@ -110,17 +109,12 @@ def consultar_dados():
             plt.title(f"Confusion Matrix - {algorithm}")
             plt.xlabel("Predicted")
             plt.ylabel("True")
-            plt.savefig(f"static/{algorithm}_confusion_matrix.png")
-            plt.close()
+            plt.savefig(f"{algorithm}_confusion_matrix.png")
 
-        return render_template('results.html', results=results)
+        return jsonify({'message': 'Consulta realizada com sucesso!', 'results': results})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-@app.route('/images/<path:filename>')
-def send_image(filename):
-    return send_file(f'static/{filename}', mimetype='image/png')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
